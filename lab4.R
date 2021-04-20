@@ -16,7 +16,18 @@ set.seed(4)
 train_ind <- sample(seq_len(nrow(raw_data)), size = training_size)
 train <- raw_data[train_ind,]
 test <- raw_data[-train_ind,]
-train[,1:6] <- scale(train[,1:6])
-head(train)
-fit <- lsfit(train[,1:6], train[7], yname = 'charges')
-ls.print(fit)
+train[,1:7] <- scale(train[,1:7])
+
+fit <- lm(unlist(train[7]) ~ unlist(train[1])
+                              + unlist(train[2])
+                              + unlist(train[3])
+                              + unlist(train[4])
+                              + unlist(train[5])
+                              + unlist(train[6])
+)
+summary(fit)
+
+fit <- lm(unlist(train[7]) ~ poly(unlist(train[1]), 1))
+summary(fit)
+ggplot(train, aes(bmi, train)) + geom_point() +
+  stat_smooth(method = lm, formula = y ~ poly(x, 1, raw = TRUE))
